@@ -25,57 +25,41 @@ public class TFTPTestClient {
         // Setting up Input Scanner
         Scanner scan = new Scanner(System.in);
         
-        // Setting up the buffer
-        byte[] buffer = new byte[512];
-        
         // Sockets
-        DatagramSocket srcSocket = new DatagramSocket(5000);
+        int srcSocket = 5000;
         int dstSocket = 4000;
+        InetAddress address = InetAddress.getByName(args[0]);
         
         // Packet
-        DatagramPacket p = new DatagramPacket(buffer,buffer.length);
         
         // Selecting Read or Write
         System.out.println("1 for READ, 2 for WRITE");
-        int opcode = scan.nextInt();
+        int INopcode = scan.nextInt();
+        int opcode;
         
-        switch(opcode){
-            case 1: // Read
-                System.out.println("Read is selected");
-                buffer[0] = (byte)0;
-                buffer[1] = (byte) opcode;
-                break;
-            case 2: // Write
-                System.out.println("Write is selected");
-                buffer[0] = (byte)0;
-                buffer[1] = (byte) opcode;
-                break;
+        if (INopcode == 1){
+            opcode = 01;
+        }
+        else if (INopcode == 2){
+            opcode = 02;
+        }
+        else{
+            opcode = -1;
         }
         
         // Filename being recieved or sent
-        System.out.print("Filename: ");
+        System.out.println("Filename: ");
         String filename = scan.next();
-        System.out.println(filename);
         
-        new TFTPTestClientThread(srcSocket, dstSocket, opcode, filename);
+        new TFTPTestClientThread(srcSocket, dstSocket, opcode, filename, address);
         
         // Write filename into buffer
-        System.arraycopy(filename.getBytes(), 0, buffer, 2, filename.length());
         
         // Sending RRQ or WRQ
         
         // ------
         
         // Sending RRQ/WRQ packet to server
-        InetAddress address = InetAddress.getByName(args[0]);
-        p.setAddress(address);
-        p.setPort(dstSocket);
-        srcSocket.send(p);
-        
-        // Recieving data
-        srcSocket.receive(p);
-        
-        
         
         // Reading Data
         //buffer = p.getData(); // Interchangable
@@ -84,18 +68,10 @@ public class TFTPTestClient {
         String sned = "sned.txt";
         String direct = "C:\\Users\\PC\\Desktop\\Recieving\\";
         
-        FileOutputStream fileStream = new FileOutputStream(direct+sned);
-        fileStream.write(p.getData(), 0, p.getData().length);
+        //FileOutputStream fileStream = new FileOutputStream(direct+sned);
+        //fileStream.write(p.getData(), 0, p.getData().length);
         
-        System.out.println(buffer);
-        
-    }
-    
-    public void RRQHandler(DatagramPacket p){
-        
-    }
-    
-    public void WRQHandler(){
+        //System.out.println(buffer);
         
     }
     

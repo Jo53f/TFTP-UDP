@@ -59,7 +59,7 @@ public class TFTPTestServerThread extends Thread{
                     byte[] filenameByte = new byte[512];
                     System.arraycopy(recPacket.getData(), 2, filenameByte, 0, recPacket.getData().length-(3+6));
                     String filename = new String(filenameByte, StandardCharsets.UTF_8);
-            
+                    
                     // Test file name
                     System.out.println(filename);
                     String directory = "C:\\Users\\PC\\Desktop\\Sending\\";
@@ -70,10 +70,18 @@ public class TFTPTestServerThread extends Thread{
                     }
                     
                     // Read file
-                    FileInputStream stream = new FileInputStream(directory + "IDEinpu");
+                    FileInputStream stream = new FileInputStream(directory + "IDEinput.txt");
         
                     // Reading file into buffer
-                    stream.read(buffer, 0, buffer.length);
+                    byte[] dataBuffer = null;
+                    if (stream.available() < 512){
+                        dataBuffer = new byte[stream.available()];
+                    }
+                    else{
+                        dataBuffer = new byte[512];
+                    }
+                    
+                    stream.read(dataBuffer, 0, dataBuffer.length);
 
                     // Sending
                     dataPacket.setAddress(address);
