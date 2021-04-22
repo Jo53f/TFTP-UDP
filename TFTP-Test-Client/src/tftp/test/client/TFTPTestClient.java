@@ -57,6 +57,8 @@ public class TFTPTestClient {
         String filename = scan.next();
         System.out.println(filename);
         
+        new TFTPTestClientThread(srcSocket, dstSocket, opcode, filename);
+        
         // Write filename into buffer
         System.arraycopy(filename.getBytes(), 0, buffer, 2, filename.length());
         
@@ -73,9 +75,7 @@ public class TFTPTestClient {
         // Recieving data
         srcSocket.receive(p);
         
-        if(opcode == 1){
-            
-        }
+        
         
         // Reading Data
         //buffer = p.getData(); // Interchangable
