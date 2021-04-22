@@ -53,33 +53,18 @@ public class TFTPTestClient {
         }
         
         // Filename being recieved or sent
-        
         System.out.print("Filename: ");
         String filename = scan.next();
         System.out.println(filename);
         
-        char a = 1;
-        byte[] b = new byte[4];
-        System.out.println(b);
-        b[0] = (byte) 4;
-        
-        System.out.println(b[1]); 
-        System.out.println(b.length);
-        System.out.println(b);
-        
         // Write filename into buffer
         System.arraycopy(filename.getBytes(), 0, buffer, 2, filename.length());
         
-        
-        System.out.println(b[1]);
-        
-        String bytetoString = new String(b);
-        System.out.print(bytetoString);
-        
         // Sending RRQ or WRQ
         
+        // ------
         
-        // Sending empty packet to server
+        // Sending RRQ/WRQ packet to server
         InetAddress address = InetAddress.getByName(args[0]);
         p.setAddress(address);
         p.setPort(dstSocket);
@@ -87,6 +72,10 @@ public class TFTPTestClient {
         
         // Recieving data
         srcSocket.receive(p);
+        
+        if(opcode == 1){
+            
+        }
         
         // Reading Data
         //buffer = p.getData(); // Interchangable
@@ -99,6 +88,14 @@ public class TFTPTestClient {
         fileStream.write(p.getData(), 0, p.getData().length);
         
         System.out.println(buffer);
+        
+    }
+    
+    public void RRQHandler(DatagramPacket p){
+        
+    }
+    
+    public void WRQHandler(){
         
     }
     

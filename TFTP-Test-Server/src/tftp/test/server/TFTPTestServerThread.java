@@ -17,9 +17,17 @@ public class TFTPTestServerThread extends Thread{
     
     // Initialising Socket
     private DatagramSocket threadSocket = null;
+    private DatagramPacket recPacket = null;
     private DatagramPacket ackPacket = null;
     private DatagramPacket dataPacket = null;
+    
+    // Initialising data buffer
     private byte[] buffer = new byte[512];
+    
+    // Extracting adress and port
+    InetAddress address = null;
+    int port;
+    
     
     public TFTPTestServerThread(DatagramSocket sck, DatagramPacket Packet){
         //super("TFTPTestServerThread");
@@ -28,26 +36,28 @@ public class TFTPTestServerThread extends Thread{
         this.threadSocket = sck;
         
         // Assign the packet recieved
+        this.recPacket = Packet;
+        
+        // Acknowledgement packet
         this.ackPacket = Packet;
         
         // Data packet
         this.dataPacket = new DatagramPacket(buffer, buffer.length);
-        
     }
     
     public void run(){
         
         // Extracting address and port
-        InetAddress address = ackPacket.getAddress();
-        int port = ackPacket.getPort();
+        address = recPacket.getAddress();
+        port = recPacket.getPort();
         
         try{
-            switch(ackPacket.getData()[1]){
+            switch(recPacket.getData()[1]){
                 case 1: // Read Request
             
                     // Reading filename
                     byte[] filenameByte = new byte[512];
-                    System.arraycopy(ackPacket.getData(), 2, filenameByte, 0, ackPacket.getData().length-(3+6));
+                    System.arraycopy(recPacket.getData(), 2, filenameByte, 0, recPacket.getData().length-(3+6));
                     String filename = new String(filenameByte, StandardCharsets.UTF_8);
             
                     // Test file name
@@ -60,7 +70,7 @@ public class TFTPTestServerThread extends Thread{
                     }
                     
                     // Read file
-                    FileInputStream stream = new FileInputStream(directory + "IDEinput.txt");
+                    FileInputStream stream = new FileInputStream(directory + "IDEinpu");
         
                     // Reading file into buffer
                     stream.read(buffer, 0, buffer.length);
@@ -69,7 +79,7 @@ public class TFTPTestServerThread extends Thread{
                     dataPacket.setAddress(address);
                     dataPacket.setPort(port);
                     threadSocket.send(dataPacket);
-            
+                    
                     break;
                 case 2:
             
@@ -77,10 +87,27 @@ public class TFTPTestServerThread extends Thread{
             }
         }
         catch(IOException e){
-            System.out.println(e);
+            System.out.println(e.toString());
+            errorHandler(e.toString());
         }
-    
         
     
     }
+    
+    private void errorHandler(String error){
+        //e.getLocalizedMessage().getBytes();
+        byte [] errBuffer = new byte[error.getBytes().length+2];
+        DatagramPacket errPacket = new DatagramPacket(errBuffer, errBuffer.length);
+        
+        System.arraycopy(error.getBytes(), 0, errBuffer, 2, error.getBytes().length);
+        
+        try{
+            errPacket.setAddress(address);
+            errPacket.setPort(port);
+            threadSocket.send(errPacket);
+        }
+        catch(IOException f){
+            System.out.print(f);
+        }
+}   
 }
