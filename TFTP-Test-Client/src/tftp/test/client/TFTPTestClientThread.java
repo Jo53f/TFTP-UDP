@@ -44,8 +44,6 @@ public class TFTPTestClientThread{
         
         byte[] opcodeByte = new byte[]{0,1};
         
-        System.out.println(opcodeByte);
-        
         System.arraycopy(opcodeByte, 0, buffer, 0, 2);
         System.arraycopy(filenameBytes, 0, buffer, 2, filenameBytes.length);
         
@@ -77,11 +75,28 @@ public class TFTPTestClientThread{
             System.out.println("Is the server running?");
         }
         
-        if (packet.getData().length < 512){
-            System.out.print("Last packet");
+        try{
+            int size = srcSocket.getReceiveBufferSize();
+            System.out.println("The buffer size is: " + size);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        
+        // testing index -- works now
+        int index = 0;
+        for (int i = 0; packet.getData()[i] != (byte)0; i++){
+            index += 1;
+        }
+        
+        System.out.println("The size of index is: " + index);
+        
+        // testing last packet
+        if (index < 512){
+            System.out.println("Last packet");
         }
         else{
-            System.out.print("More packets");
+            System.out.println("More packets");
         }
         
         try{

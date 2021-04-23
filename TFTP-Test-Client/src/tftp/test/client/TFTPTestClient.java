@@ -65,8 +65,8 @@ public class TFTPTestClient {
         //buffer = p.getData(); // Interchangable
         
         // File Output
-        String sned = "sned.txt";
-        String direct = "C:\\Users\\PC\\Desktop\\Recieving\\";
+        //String sned = "sned.txt";
+        //String direct = "C:\\Users\\PC\\Desktop\\Recieving\\";
         
         //FileOutputStream fileStream = new FileOutputStream(direct+sned);
         //fileStream.write(p.getData(), 0, p.getData().length);

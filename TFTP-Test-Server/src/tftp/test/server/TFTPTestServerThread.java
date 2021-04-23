@@ -8,6 +8,7 @@ package tftp.test.server;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.*;
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -65,23 +66,47 @@ public class TFTPTestServerThread extends Thread{
                     String directory = "C:\\Users\\PC\\Desktop\\Sending\\";
                     System.out.println(directory);
                     
-                    if ("sned.txt" == filename){
+                    if ("sned.txt".equals(filename)){
                         System.out.println("They're the same");
                     }
                     
                     // Read file
                     FileInputStream stream = new FileInputStream(directory + "IDEinput.txt");
-        
-                    // Reading file into buffer
-                    byte[] dataBuffer = null;
-                    if (stream.available() < 512){
-                        dataBuffer = new byte[stream.available()];
-                    }
-                    else{
-                        dataBuffer = new byte[512];
+                    
+                    byte[] buf = new byte[stream.available()];
+                    
+                    stream.read(buf);
+                    
+                    
+                    int x = 512;
+                    int i = 0;
+                    while( x <= buf.length){
+                       
+                        System.arraycopy(buf, i, buffer, 0, x);
+                        
+                        dataPacket.setAddress(address);
+                        dataPacket.setPort(port);
+                        threadSocket.send(dataPacket);
+                        
+                        i = x;
+                        x += 512;
+                        
                     }
                     
-                    stream.read(dataBuffer, 0, dataBuffer.length);
+                    System.arraycopy(buf, i, buffer, 0, buf.length);
+        
+                    // Reading file into buffer
+                   // byte[] dataBuffer = null;
+                   // if (stream.available() < 512){
+                   //     dataBuffer = new byte[stream.available()+200];
+                   // }
+                   // else{
+                   //     dataBuffer = new byte[512];
+                   // }
+                    
+                    System.out.println("The buf size is: " + buf.length);
+                    System.out.println("The buffer size is: " + buffer.length);
+                   // stream.read(buffer, 0, buffer.length);
 
                     // Sending
                     dataPacket.setAddress(address);
