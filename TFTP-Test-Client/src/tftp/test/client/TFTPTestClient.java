@@ -51,28 +51,7 @@ public class TFTPTestClient {
         System.out.println("Filename: ");
         String filename = scan.next();
         
-        new TFTPTestClientThread(srcSocket, dstSocket, opcode, filename, address);
-        
-        // Write filename into buffer
-        
-        // Sending RRQ or WRQ
-        
-        // ------
-        
-        // Sending RRQ/WRQ packet to server
-        
-        // Reading Data
-        //buffer = p.getData(); // Interchangable
-        
-        // File Output
-        //String sned = "sned.txt";
-        //String direct = "C:\\Users\\PC\\Desktop\\Recieving\\";
-        
-        //FileOutputStream fileStream = new FileOutputStream(direct+sned);
-        //fileStream.write(p.getData(), 0, p.getData().length);
-        
-        //System.out.println(buffer);
-        
+        new TFTPTestClientThread(srcSocket, dstSocket, opcode, filename, address); 
     }
     
 }
